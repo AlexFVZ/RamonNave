@@ -47,6 +47,7 @@ public class GameView extends View {
 
     private void initBalls() {
         listBalls = new ArrayList<>();
+        listShots = new ArrayList<>();
         Ball ball = new Ball(200, 200);
         ball.setRadius(100);
         ball.setVelocity(30);
@@ -62,7 +63,7 @@ public class GameView extends View {
         p.setColor(Color.BLUE);
         ball1.setPaint(p);
 
-        car = new Car(500, 2000 - 20, this.getContext());
+        car = new Car(500, 1900 - 20, this.getContext());
         car.setRadius(20);
         car.setVelocity(20);
         p.setColor(Color.GREEN);
@@ -92,23 +93,26 @@ public class GameView extends View {
                     b1.setDirectionY(!b1.isDirectionY());
                     b2.setDirectionX(!b2.isDirectionX());
                     b2.setDirectionY(!b2.isDirectionY());
+                    //comprovar shots
+
+
                 }
 
 
             }
-            //comprovar shots
-            for (int j = 0; j < listShots.size() - 1; j++){
-                shot=listShots.get(j);
-                if (shot.collision(b1)) {
-                    // HI HA COLISIO Invert Directions
-                    listBalls.remove(b1);
-                    contador++;
-                    puntuacio.setText("Puntuació: "+contador);
-                }
-            }
+//            shot=listShots.get(i);
+//            if (shot.collision(b1)) {
+//                // HI HA COLISIO Invert Directions
+//                listBalls.remove(b1);
+//                contador++;
+//                puntuacio.setText("Puntuació: "+contador);
+//            }
+
             //comprovar car
 
             if (car.collision(b1)) {
+                contador++;
+                puntuacio.setText("Puntuació: "+contador);
             }
 
         }

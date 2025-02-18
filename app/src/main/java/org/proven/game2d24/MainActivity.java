@@ -24,16 +24,13 @@ public class MainActivity extends AppCompatActivity {
         b.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                gameView.postInvalidate(); // onDraw
-//                gameView.move();
+                gameView.postInvalidate(); // onDraw
+                gameView.move();
 
             }
         });
-
         ThreadGame thread = new ThreadGame(gameView);
         thread.start();
-
-        resultat.setText("Has perdut");
     }
 
     private void prepareObject() {

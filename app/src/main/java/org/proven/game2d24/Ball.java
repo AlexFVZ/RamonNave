@@ -32,7 +32,7 @@ public class Ball {
         this.y = y;
     }
 
-    public boolean collision(Ball  b) {
+    public boolean collision(Ball b) {
         boolean ret = false;
         double D =
                 Math.sqrt( Math.pow(getX() - b.getX(), 2)
