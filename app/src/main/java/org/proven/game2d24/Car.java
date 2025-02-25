@@ -42,8 +42,6 @@ public class Car {
 
     }
 
-    //variables
-
     public boolean collision(Ball  b) {
         boolean ret = false;
         double D =
@@ -55,12 +53,6 @@ public class Car {
         }
         return ret;
     }
-
-
-
-    //Constructor
-
-    //move()
 
     public void move() {
         // Directions  X

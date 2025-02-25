@@ -8,6 +8,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -44,6 +45,7 @@ public class GameView extends View {
             b.setMaxY(h);
         }
     }
+
 
     private void initBalls() {
         listBalls = new ArrayList<>();
@@ -94,8 +96,10 @@ public class GameView extends View {
                     b2.setDirectionX(!b2.isDirectionX());
                     b2.setDirectionY(!b2.isDirectionY());
                     //comprovar shots
-
-
+                    if (car.collision(b1)||car.collision(b2)) {
+                        contador++;
+                        Log.d("TAG", String.valueOf(contador));
+                    }
                 }
 
 
@@ -110,17 +114,12 @@ public class GameView extends View {
 
             //comprovar car
 
-            if (car.collision(b1)) {
-                contador++;
-                puntuacio.setText("Puntuació: "+contador);
-            }
+
 
         }
 
 
     }
-
-
     @Override
     protected void onDraw(@NonNull Canvas canvas) {
         super.onDraw(canvas);
