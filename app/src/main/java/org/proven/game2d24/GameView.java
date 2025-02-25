@@ -1,5 +1,6 @@
 package org.proven.game2d24;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -33,6 +34,9 @@ public class GameView extends View {
 
     public GameView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
+        if (context instanceof MainActivity) {
+            this.puntuacio = ((MainActivity) context).resultat;
+        }
         initBalls();
         System.out.println("GameView Constructor");
     }
@@ -67,7 +71,7 @@ public class GameView extends View {
         ball1.setPaint(p);
 
         car = new Car(500, 1900 - 20, this.getContext());
-        car.setRadius(20);
+        car.setRadius(30);
         car.setVelocity(20);
         p.setColor(Color.GREEN);
         car.setPaint(p);
@@ -79,7 +83,7 @@ public class GameView extends View {
 
     public void initShot() {
         Shot shot = new Shot(car.getX(), car.getY());
-        shot.setRadius(10);
+        shot.setRadius(20);
         shot.setVelocity(35);
         Paint p = new Paint();
         p.setColor(Color.WHITE);
@@ -126,18 +130,14 @@ public class GameView extends View {
                         listShots.remove(i);
                         contador++;
                         Log.d("TAG", String.valueOf(contador));
-                        puntuacio.setText("Puntuació: "+contador);
+                        ((Activity) getContext()).runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                puntuacio.setText("Puntuació: " + contador);
+                            }
+                        });
                     }
                 }
-//            shot=listShots.get(i);
-//            if (shot.collision(b1)) {
-//                // HI HA COLISIO Invert Directions
-//                listBalls.remove(b1);
-//                contador++;
-//                puntuacio.setText("Puntuació: "+contador);
-//            }
-
-                //comprovar car
 
             }
         }
