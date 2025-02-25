@@ -21,12 +21,13 @@ public class GameView extends View {
 
     ArrayList<Ball> listBalls;
     Car car;
-    ArrayList<Ball> listShots;
-    TextView puntuacio=findViewById(R.id.contador);
-    int contador=0;
+    ArrayList<Shot> listShots;
+    TextView puntuacio;
+    int contador = 0;
 
-    public GameView(Context context) {
+    public GameView(Context context,TextView puntuacio) {
         super(context);
+        this.puntuacio = puntuacio;
         initBalls();
     }
 
@@ -76,17 +77,35 @@ public class GameView extends View {
         listBalls.add(ball1);
     }
 
+    public void initShot() {
+        Shot shot = new Shot(car.getX(), car.getY());
+        shot.setRadius(10);
+        shot.setVelocity(35);
+        Paint p = new Paint();
+        p.setColor(Color.WHITE);
+        p.setStrokeWidth(10);
+        shot.setPaint(p);
+        listShots.add(shot);
+    }
+
     public void move() {
         car.move();
         for (Ball b : listBalls) {
             b.move();
         }
+        for (Shot s : listShots) {
+            s.move();
+        }
     }
 
     public void collisions() {
-        Ball b1, b2,shot;
+        Ball b1, b2;
+        Shot shot = new Shot();
         for (int i = 0; i < listBalls.size() - 1; i++) {
             b1 = listBalls.get(i);
+            if (listShots.size() >i) {
+                shot = listShots.get(i);
+            }
             for (int j = i + 1; j < listBalls.size(); j++) {
                 b2 = listBalls.get(j);
                 if (b1.collision(b2)) {
@@ -96,14 +115,20 @@ public class GameView extends View {
                     b2.setDirectionX(!b2.isDirectionX());
                     b2.setDirectionY(!b2.isDirectionY());
                     //comprovar shots
-                    if (car.collision(b1)||car.collision(b2)) {
-                        contador++;
-                        Log.d("TAG", String.valueOf(contador));
+
+                    if (car.collision(b1) || car.collision(b2)) {
+
                     }
                 }
-
-
-            }
+                if (listShots.size() >i) {
+                    if (shot.collision(b1)) {
+                        listBalls.remove(i);
+                        listShots.remove(i);
+                        contador++;
+                        Log.d("TAG", String.valueOf(contador));
+                        puntuacio.setText("Puntuació: "+contador);
+                    }
+                }
 //            shot=listShots.get(i);
 //            if (shot.collision(b1)) {
 //                // HI HA COLISIO Invert Directions
@@ -112,14 +137,12 @@ public class GameView extends View {
 //                puntuacio.setText("Puntuació: "+contador);
 //            }
 
-            //comprovar car
+                //comprovar car
 
-
-
+            }
         }
-
-
     }
+
     @Override
     protected void onDraw(@NonNull Canvas canvas) {
         super.onDraw(canvas);
@@ -127,6 +150,9 @@ public class GameView extends View {
         for (Ball b : listBalls) {
             b.onDraw(canvas);
 
+        }
+        for (Shot s : listShots) {
+            s.onDraw(canvas);
         }
     }
 }

@@ -1,10 +1,14 @@
 package org.proven.game2d24;
 
+import android.widget.TextView;
+
 public class ThreadGame extends Thread {
     GameView gameView;
+    TextView puntuacio;
 
-    public ThreadGame(GameView gameView) {
+    public ThreadGame(GameView gameView,TextView puntuacio) {
         this.gameView = gameView;
+        this.puntuacio = puntuacio;
     }
     boolean seguir=true;
 

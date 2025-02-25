@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initGame() {
-        ThreadGame thread = new ThreadGame(gameView);
+        ThreadGame thread = new ThreadGame(gameView,resultat);
         thread.start();
     }
 
@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (v.getId()==R.id.bShot){
-                    gameView;
+                    gameView.initShot();
                 }
             }
         };
