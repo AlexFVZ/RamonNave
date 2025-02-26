@@ -16,7 +16,7 @@ public class Ball {
     public Ball() {
         x = 0;
         y = 0;
-        maxX = 600;
+        maxX = 1000;
         maxY = 800;
         radius = 20;
         paint = new Paint();

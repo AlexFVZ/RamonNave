@@ -9,7 +9,8 @@ import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
 
-    TextView resultat;
+    TextView contador;
+    int puntuacion=0;
     GameView gameView;
     Button b;
 
@@ -39,10 +40,11 @@ public class MainActivity extends AppCompatActivity {
 
     private void initListener() {
         b.setOnClickListener(listener);
+        gameView.setOnClickListener(listener);
     }
 
     private void initGame() {
-        ThreadGame thread = new ThreadGame(gameView,resultat);
+        ThreadGame thread = new ThreadGame(gameView,contador);
         thread.start();
     }
 
@@ -53,13 +55,17 @@ public class MainActivity extends AppCompatActivity {
                 if (v.getId()==R.id.bShot){
                     gameView.initShot();
                 }
+                else if(v.getId()==R.id.gameview){
+                    gameView.initClickBall();
+                }
             }
         };
     }
 
     private void prepareObject() {
-        resultat=findViewById(R.id.resultat);
+        contador=findViewById(R.id.contador);
         gameView =findViewById(R.id.gameview);
+        gameView.setPuntuacio(contador);
         b =findViewById(R.id.bShot);
     }
 }

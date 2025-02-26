@@ -26,17 +26,17 @@ public class GameView extends View {
     TextView puntuacio;
     int contador = 0;
 
-    public GameView(Context context,TextView puntuacio) {
+    public GameView(Context context) {
         super(context);
-        this.puntuacio = puntuacio;
         initBalls();
+    }
+
+    public void setPuntuacio(TextView contador) {
+        this.puntuacio=contador;
     }
 
     public GameView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
-        if (context instanceof MainActivity) {
-            this.puntuacio = ((MainActivity) context).resultat;
-        }
         initBalls();
         System.out.println("GameView Constructor");
     }
@@ -57,22 +57,22 @@ public class GameView extends View {
         listShots = new ArrayList<>();
         Ball ball = new Ball(200, 200);
         ball.setRadius(100);
-        ball.setVelocity(30);
+        ball.setVelocity(20);
         Paint p = new Paint();
-        p.setColor(Color.RED);
+        p.setColor(randomColor());
         p.setStrokeWidth(10);
         ball.setPaint(p);
 
         Ball ball1 = new Ball(100, 400);
         ball1.setRadius(80);
-        ball1.setVelocity(30);
+        ball1.setVelocity(20);
         p = new Paint();
-        p.setColor(Color.BLUE);
+        p.setColor(randomColor());
         ball1.setPaint(p);
 
         car = new Car(500, 1900 - 20, this.getContext());
         car.setRadius(30);
-        car.setVelocity(20);
+        car.setVelocity(30);
         p.setColor(Color.GREEN);
         car.setPaint(p);
         Bitmap ballImage = BitmapFactory.decodeResource(getResources(), R.drawable.nausinfondo);
@@ -92,6 +92,17 @@ public class GameView extends View {
         listShots.add(shot);
     }
 
+    public void initClickBall(){
+        Ball nb = new Ball();
+        nb.setRadius((int)(Math.random()*100)+1);
+        nb.setVelocity(20);
+        Paint p = new Paint();
+        p.setColor(randomColor());
+        p.setStrokeWidth(10);
+        nb.setPaint(p);
+        listBalls.add(nb);
+    }
+
     public void move() {
         car.move();
         for (Ball b : listBalls) {
@@ -104,12 +115,8 @@ public class GameView extends View {
 
     public void collisions() {
         Ball b1, b2;
-        Shot shot = new Shot();
         for (int i = 0; i < listBalls.size() - 1; i++) {
             b1 = listBalls.get(i);
-            if (listShots.size() >i) {
-                shot = listShots.get(i);
-            }
             for (int j = i + 1; j < listBalls.size(); j++) {
                 b2 = listBalls.get(j);
                 if (b1.collision(b2)) {
@@ -124,21 +131,25 @@ public class GameView extends View {
 
                     }
                 }
-                if (listShots.size() >i) {
-                    if (shot.collision(b1)) {
-                        listBalls.remove(i);
-                        listShots.remove(i);
-                        contador++;
-                        Log.d("TAG", String.valueOf(contador));
-                        ((Activity) getContext()).runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                puntuacio.setText("Puntuació: " + contador);
-                            }
-                        });
-                    }
+            }
+        }
+        for (int i = listShots.size() - 1; i >= 0; i--) {
+            Shot shot = listShots.get(i);
+            for (int j = listBalls.size() - 1; j >= 0; j--) {
+                Ball ball = listBalls.get(j);
+                if (shot.collision(ball)) {
+                    Log.d("COLLISION", "Disparo " + i + " eliminó bola " + j + ". Puntuación: " + contador);
+                    listShots.remove(i);
+                    listBalls.remove(j);
+                    contador++;
+                    ((Activity) getContext()).runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            puntuacio.setText("Puntuació: " + contador);
+                        }
+                    });
+                    break;
                 }
-
             }
         }
     }
@@ -155,4 +166,21 @@ public class GameView extends View {
             s.onDraw(canvas);
         }
     }
+
+    public int randomColor(){
+        int c=0;
+        int random = (int)(Math.random()*4)+1;
+        if(random==1){
+            c= Color.BLUE;
+        } else if (random==2) {
+            c= Color.RED;
+        }else if (random==3) {
+            c= Color.YELLOW;
+        }else{
+            c= Color.GREEN;
+        }
+
+        return c;
+    }
+
 }

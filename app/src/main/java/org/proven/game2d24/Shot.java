@@ -19,15 +19,16 @@ public class Shot {
         y = 0;
         maxX = 1000;
         maxY = 800;
-        radius = 5;
+        radius = 20;
         paint = new Paint();
         paint.setColor(Color.WHITE);
-        velocity = 10;
+        velocity = 35;
         directionX = true;
-        directionY = true;
+        directionY = false;
     }
 
     public Shot(int x, int y) {
+        this();
         this.x = x;
         this.y = y;
     }
