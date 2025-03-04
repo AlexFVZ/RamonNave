@@ -3,6 +3,7 @@ package org.proven.game2d24;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.view.MotionEvent;
 
 public class Ball {
     int x,y;  // Position
@@ -16,8 +17,8 @@ public class Ball {
     public Ball() {
         x = 0;
         y = 0;
-        maxX = 1000;
-        maxY = 800;
+        maxX = 1100;
+        maxY = 2100;
         radius = 20;
         paint = new Paint();
         paint.setColor(Color.BLUE);

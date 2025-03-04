@@ -25,11 +25,7 @@ public class GameView extends View {
     ArrayList<Shot> listShots;
     TextView puntuacio;
     int contador = 0;
-
-    public GameView(Context context) {
-        super(context);
-        initBalls();
-    }
+    ThreadGame threadGame;
 
     public void setPuntuacio(TextView contador) {
         this.puntuacio=contador;
@@ -41,6 +37,10 @@ public class GameView extends View {
         System.out.println("GameView Constructor");
     }
 
+    public void setThreadGame(ThreadGame threadGame) {
+        this.threadGame = threadGame;
+    }
+
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
@@ -50,7 +50,6 @@ public class GameView extends View {
             b.setMaxY(h);
         }
     }
-
 
     private void initBalls() {
         listBalls = new ArrayList<>();
@@ -68,6 +67,7 @@ public class GameView extends View {
         ball1.setVelocity(20);
         p = new Paint();
         p.setColor(randomColor());
+        p.setStrokeWidth(10);
         ball1.setPaint(p);
 
         car = new Car(500, 1900 - 20, this.getContext());
@@ -92,15 +92,15 @@ public class GameView extends View {
         listShots.add(shot);
     }
 
-    public void initClickBall(){
-        Ball nb = new Ball();
-        nb.setRadius((int)(Math.random()*100)+1);
-        nb.setVelocity(20);
-        Paint p = new Paint();
-        p.setColor(randomColor());
-        p.setStrokeWidth(10);
-        nb.setPaint(p);
-        listBalls.add(nb);
+    public void initClickBall(int x,int y){
+            Ball nb = new Ball(x, y);
+            nb.setRadius((int) (Math.random() * 100) + 20);
+            nb.setVelocity(20);
+            Paint p = new Paint();
+            p.setColor(randomColor());
+            p.setStrokeWidth(10);
+            nb.setPaint(p);
+            listBalls.add(nb);
     }
 
     public void move() {
@@ -116,21 +116,22 @@ public class GameView extends View {
     public void collisions() {
         Ball b1, b2;
         for (int i = 0; i < listBalls.size() - 1; i++) {
-            b1 = listBalls.get(i);
+             b1 = listBalls.get(i);
             for (int j = i + 1; j < listBalls.size(); j++) {
                 b2 = listBalls.get(j);
                 if (b1.collision(b2)) {
-                    // HI HA COLISIO Invert Directions
                     b1.setDirectionX(!b1.isDirectionX());
                     b1.setDirectionY(!b1.isDirectionY());
                     b2.setDirectionX(!b2.isDirectionX());
                     b2.setDirectionY(!b2.isDirectionY());
-                    //comprovar shots
-
-                    if (car.collision(b1) || car.collision(b2)) {
-
-                    }
                 }
+            }
+        }
+        for (int i = listBalls.size() - 1; i >= 0; i--){
+            b1 = listBalls.get(i);
+            if (car.collision(b1)){
+                threadGame.finalizar();
+                Log.d("LOSE","La bola "+i+"ha dado en el coche");
             }
         }
         for (int i = listShots.size() - 1; i >= 0; i--) {
@@ -152,6 +153,10 @@ public class GameView extends View {
                 }
             }
         }
+        if (listBalls.size()==0){
+            threadGame.finalizar();
+            Log.d("WIN","Has ganado");
+        }
     }
 
     @Override
@@ -160,7 +165,6 @@ public class GameView extends View {
         car.onDraw(canvas);
         for (Ball b : listBalls) {
             b.onDraw(canvas);
-
         }
         for (Shot s : listShots) {
             s.onDraw(canvas);
@@ -172,15 +176,15 @@ public class GameView extends View {
         int random = (int)(Math.random()*4)+1;
         if(random==1){
             c= Color.BLUE;
-        } else if (random==2) {
+        }
+        else if (random==2) {
             c= Color.RED;
-        }else if (random==3) {
+        }
+        else if (random==3) {
             c= Color.YELLOW;
         }else{
             c= Color.GREEN;
         }
-
         return c;
     }
-
 }

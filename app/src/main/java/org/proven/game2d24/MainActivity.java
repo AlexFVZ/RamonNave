@@ -3,6 +3,7 @@ package org.proven.game2d24;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -10,9 +11,11 @@ import android.widget.TextView;
 public class MainActivity extends AppCompatActivity {
 
     TextView contador;
-    int puntuacion=0;
     GameView gameView;
     Button b;
+    int x,y;
+    MotionEvent event;
+    ThreadGame thread;
 
     View.OnClickListener listener;
 
@@ -24,17 +27,9 @@ public class MainActivity extends AppCompatActivity {
         prepareObject();
         prepareListener();
         initListener();
-        initGame();
 
+            initGame();
 
-//        b.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                gameView.postInvalidate(); // onDraw
-//                gameView.move();
-//
-//            }
-//        });
 
     }
 
@@ -43,29 +38,47 @@ public class MainActivity extends AppCompatActivity {
         gameView.setOnClickListener(listener);
     }
 
-    private void initGame() {
-        ThreadGame thread = new ThreadGame(gameView,contador);
+    private void initGame()  {
+        thread = new ThreadGame(gameView,contador);
+        gameView.setThreadGame(thread);
         thread.start();
+
     }
 
     private void prepareListener() {
-        listener = new View.OnClickListener() {
+        listener = new View.OnClickListener(){
             @Override
             public void onClick(View v) {
                 if (v.getId()==R.id.bShot){
                     gameView.initShot();
                 }
                 else if(v.getId()==R.id.gameview){
-                    gameView.initClickBall();
+                    gameView.setOnTouchListener(new View.OnTouchListener() {
+                        @Override
+                        public boolean onTouch(View v, MotionEvent event) {
+                            final int actionPeformed = event.getAction();
+                            switch (actionPeformed){
+                                case MotionEvent.ACTION_DOWN:{
+                                    x=(int) event.getX();
+                                    y=(int) event.getY();
+                                    gameView.initClickBall(x,y);
+                                }
+                            }
+                            return true;
+                        }
+                    });
                 }
             }
         };
     }
 
     private void prepareObject() {
+
         contador=findViewById(R.id.contador);
         gameView =findViewById(R.id.gameview);
         gameView.setPuntuacio(contador);
         b =findViewById(R.id.bShot);
     }
+
+
 }
