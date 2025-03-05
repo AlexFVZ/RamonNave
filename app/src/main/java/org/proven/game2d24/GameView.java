@@ -125,12 +125,20 @@ public class GameView extends View {
              b1 = listBalls.get(i);
             for (int j = i + 1; j < listBalls.size(); j++) {
                 b2 = listBalls.get(j);
-                if (b1.collision(b2)) {
-                    b1.setDirectionX(!b1.isDirectionX());
-                    b1.setDirectionY(!b1.isDirectionY());
-                    b2.setDirectionX(!b2.isDirectionX());
-                    b2.setDirectionY(!b2.isDirectionY());
-                }
+                    if (b1.collision(b2)) {
+                        if (b1.getPaint().getColor()==b2.getPaint().getColor()) {
+                            listBalls.remove(j);
+                            listBalls.remove(i);
+                            i--;
+                            break;
+                        }else{
+                            b1.setDirectionX(!b1.isDirectionX());
+                            b1.setDirectionY(!b1.isDirectionY());
+                            b2.setDirectionX(!b2.isDirectionX());
+                            b2.setDirectionY(!b2.isDirectionY());
+                        }
+                    }
+
             }
         }
         for (int i = listBalls.size() - 1; i >= 0; i--){
