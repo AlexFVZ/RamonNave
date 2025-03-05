@@ -18,9 +18,10 @@
 
     <Button
         android:id="@+id/bShot"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Shot"
+        android:textSize="20dp"
         />
 
     <org.proven.game2d24.GameView
