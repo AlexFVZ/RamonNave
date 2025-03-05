@@ -26,6 +26,8 @@ public class GameView extends View {
     TextView puntuacio;
     int contador = 0;
     ThreadGame threadGame;
+    MainActivity main;
+    boolean victoria=false;
 
     public void setPuntuacio(TextView contador) {
         this.puntuacio=contador;
@@ -35,6 +37,10 @@ public class GameView extends View {
         super(context, attrs);
         initBalls();
         System.out.println("GameView Constructor");
+    }
+
+    public void setMain(MainActivity main){
+        this.main = main;
     }
 
     public void setThreadGame(ThreadGame threadGame) {
@@ -56,7 +62,7 @@ public class GameView extends View {
         listShots = new ArrayList<>();
         Ball ball = new Ball(200, 200);
         ball.setRadius(100);
-        ball.setVelocity(20);
+        ball.setVelocity(10);
         Paint p = new Paint();
         p.setColor(randomColor());
         p.setStrokeWidth(10);
@@ -64,14 +70,14 @@ public class GameView extends View {
 
         Ball ball1 = new Ball(100, 400);
         ball1.setRadius(80);
-        ball1.setVelocity(20);
+        ball1.setVelocity(10);
         p = new Paint();
         p.setColor(randomColor());
         p.setStrokeWidth(10);
         ball1.setPaint(p);
 
         car = new Car(500, 1900 - 20, this.getContext());
-        car.setRadius(30);
+        car.setRadius(20);
         car.setVelocity(30);
         p.setColor(Color.GREEN);
         car.setPaint(p);
@@ -95,7 +101,7 @@ public class GameView extends View {
     public void initClickBall(int x,int y){
             Ball nb = new Ball(x, y);
             nb.setRadius((int) (Math.random() * 100) + 20);
-            nb.setVelocity(20);
+            nb.setVelocity(10);
             Paint p = new Paint();
             p.setColor(randomColor());
             p.setStrokeWidth(10);
@@ -131,7 +137,9 @@ public class GameView extends View {
             b1 = listBalls.get(i);
             if (car.collision(b1)){
                 threadGame.finalizar();
-                Log.d("LOSE","La bola "+i+"ha dado en el coche");
+                Log.d("LOSE","La bola "+i+" ha dado en el coche");
+                victoria=false;
+                main.VoDGame(victoria);
             }
         }
         for (int i = listShots.size() - 1; i >= 0; i--) {
@@ -156,6 +164,8 @@ public class GameView extends View {
         if (listBalls.size()==0){
             threadGame.finalizar();
             Log.d("WIN","Has ganado");
+            victoria=true;
+            main.VoDGame(victoria);
         }
     }
 
@@ -186,5 +196,18 @@ public class GameView extends View {
             c= Color.GREEN;
         }
         return c;
+    }
+
+    public boolean isVictoria() {
+        return victoria;
+    }
+
+    public void reinicio(){
+        listBalls.clear();
+        listShots.clear();
+        contador = 0;
+        puntuacio.setText("Puntuació:0");
+        initBalls();
+        postInvalidate();
     }
 }

@@ -1,5 +1,6 @@
 package org.proven.game2d24;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
@@ -14,7 +15,6 @@ public class MainActivity extends AppCompatActivity {
     GameView gameView;
     Button b;
     int x,y;
-    MotionEvent event;
     ThreadGame thread;
 
     View.OnClickListener listener;
@@ -27,10 +27,7 @@ public class MainActivity extends AppCompatActivity {
         prepareObject();
         prepareListener();
         initListener();
-
-            initGame();
-
-
+        initGame();
     }
 
     private void initListener() {
@@ -39,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initGame()  {
-        thread = new ThreadGame(gameView,contador);
+        thread = new ThreadGame(gameView,contador,this);
         gameView.setThreadGame(thread);
         thread.start();
 
@@ -77,8 +74,29 @@ public class MainActivity extends AppCompatActivity {
         contador=findViewById(R.id.contador);
         gameView =findViewById(R.id.gameview);
         gameView.setPuntuacio(contador);
+        gameView.setMain(this);
         b =findViewById(R.id.bShot);
     }
 
-
+    public void VoDGame(boolean victoria) {
+        runOnUiThread(() -> {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        if (victoria) {
+            builder.setTitle("¡Victoria!")
+                    .setMessage("Has ganado con " + contador.getText() + " . ¿Reiniciar?");
+        } else {
+            builder.setTitle("Game Over")
+                    .setMessage("Has perdido. " + contador.getText() + ". ¿Reiniciar?");
+        }
+        builder.setPositiveButton("Sí", (dialog, which) -> {
+            gameView.reinicio();
+            thread = new ThreadGame(gameView, contador, this);
+            gameView.setThreadGame(thread);
+            thread.start();
+        });
+        builder.setNegativeButton("No", (dialog, which) -> finish());
+        builder.setCancelable(false);
+        builder.show();
+        });
+    }
 }

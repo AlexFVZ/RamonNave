@@ -28,7 +28,7 @@ public class Car {
         radius = 20;
         paint = new Paint();
         paint.setColor(Color.GREEN);
-        velocity = 10;
+        velocity = 15;
         directionX = true;
         directionY = true;
         live = true;
@@ -39,7 +39,7 @@ public class Car {
         this();
         this.x = x;
         this.y = y;
-
+        velocity = 15;
     }
 
     public boolean collision(Ball  b) {

@@ -5,11 +5,13 @@ import android.widget.TextView;
 public class ThreadGame extends Thread {
     GameView gameView;
     TextView puntuacio;
+    MainActivity main;
     boolean seguir=true;
 
-    public ThreadGame(GameView gameView,TextView puntuacio) {
+    public ThreadGame(GameView gameView,TextView puntuacio,MainActivity main) {
         this.gameView = gameView;
         this.puntuacio = puntuacio;
+        this.main = main;
     }
 
 
@@ -18,12 +20,13 @@ public class ThreadGame extends Thread {
         super.run();
         try {
             while (seguir) {
-                sleep(20);
+                sleep(30);
                 gameView.move();
                 gameView.collisions();
                 gameView.postInvalidate();
             }
         } catch (InterruptedException e) {
+
         }
     }
     public void finalizar(){
